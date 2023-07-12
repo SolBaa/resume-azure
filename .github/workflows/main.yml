@@ -20,4 +20,8 @@ jobs:
     - name: Sync files to Bucket
       run: |
         gsutil -m rm gs://cloud-resume-challenge-gcp/**  # This removes all files from your bucket
-        gsutil -m cp -r . gs://cloud-resume-challenge-gcp/  # This copies all new files from your repository to the bucket
+        gsutil -m cp -r ./assets gs://cloud-resume-challenge-gcp/  # This copies all new files from your repository to the bucket
+        gsutil -m cp ./index.html gs://cloud-resume-challenge-gcp/ # This copies the index.html file to the bucket root
+        gsutil -m cp ./resume.css gs://cloud-resume-challenge-gcp/ # This copies the resume.css file to the bucket root
+        gsutil -m cp ./index.js gs://cloud-resume-challenge-gcp/ # This copies the index.js file to the bucket root
+
