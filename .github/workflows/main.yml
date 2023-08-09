@@ -48,9 +48,10 @@ jobs:
 
     - name: Copy files to the S3 bucket
       run: |
-          aws s3 cp ./assets s3://resume-solbtt/ --recursive
+          aws s3 cp ./assets s3://resume-solbtt/assets --recursive
           aws s3 cp ./index.html s3://resume-solbtt/
           aws s3 cp ./resume.css s3://resume-solbtt/
           aws s3 cp ./index.js s3://resume-solbtt/
+          aws s3 cp ./BattagliaCV.pdf s3://resume-solbtt/
       # Change the paths to match your files and bucket
 
