@@ -1,27 +1,56 @@
-name: Sync to GCP Bucket
+# name: Sync to GCP Bucket
+# on:
+#   push:
+#     branches:
+#       - main  # or your default branch
+
+# jobs:
+#   sync:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2  # This step checks out your repository to the runner
+
+#     - name: Set up Cloud SDK
+#       uses: google-github-actions/setup-gcloud@v0.2.1
+#       with:
+#         project_id: ${{ secrets.GCP_PROJECT_ID }}
+#         service_account_key: ${{ secrets.GCP_SA_KEY }}
+#         export_default_credentials: true
+
+#     - name: Sync files to Bucket
+#       run: |
+#         gsutil -m rm gs://cloud-resume-challenge-gcp/**  # This removes all files from your bucket
+#         gsutil -m cp -r ./assets gs://cloud-resume-challenge-gcp/  # This copies all new files from your repository to the bucket
+#         gsutil -m cp ./index.html gs://cloud-resume-challenge-gcp/ # This copies the index.html file to the bucket root
+#         gsutil -m cp ./resume.css gs://cloud-resume-challenge-gcp/ # This copies the resume.css file to the bucket root
+#         gsutil -m cp ./index.js gs://cloud-resume-challenge-gcp/ # This copies the index.js file to the bucket root
+name: Push Code and Upload to S3
+
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main # Trigger this action on push to the main branch
 
 jobs:
-  sync:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v2  # This step checks out your repository to the runner
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0.2.1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2 # Change to your desired AWS region
 
-    - name: Sync files to Bucket
+    - name: Copy files to the S3 bucket
       run: |
-        gsutil -m rm gs://cloud-resume-challenge-gcp/**  # This removes all files from your bucket
-        gsutil -m cp -r ./assets gs://cloud-resume-challenge-gcp/  # This copies all new files from your repository to the bucket
-        gsutil -m cp ./index.html gs://cloud-resume-challenge-gcp/ # This copies the index.html file to the bucket root
-        gsutil -m cp ./resume.css gs://cloud-resume-challenge-gcp/ # This copies the resume.css file to the bucket root
-        gsutil -m cp ./index.js gs://cloud-resume-challenge-gcp/ # This copies the index.js file to the bucket root
+          aws s3 cp ./assets s3://resume-solbtt/ --recursive
+          aws s3 cp ./index.html s3://resume-solbtt/
+          aws s3 cp ./resume.css s3://resume-solbtt/
+          aws s3 cp ./index.js s3://resume-solbtt/
+      # Change the paths to match your files and bucket
 
